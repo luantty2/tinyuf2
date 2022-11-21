@@ -9,3 +9,5 @@ _bin/
 *.cmake~
 sdkconfig~
 *.yml~
+*/.DS_Store
+.DS_Store
