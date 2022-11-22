@@ -72,6 +72,15 @@ void board_init(void)
   board_led_write(0);
 #endif
 
+#ifdef CUSTOM_GPIO_PIN
+  GPIO_InitStruct.Pin = CUSTOM_GPIO_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+  HAL_GPIO_Init(CUSTOM_GPIO_PORT, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(CUSTOM_GPIO_PORT, CUSTOM_GPIO_PIN, 1);
+#endif
+
 #if NEOPIXEL_NUMBER
   GPIO_InitStruct.Pin = NEOPIXEL_PIN;
   GPIO_InitStruct.Mode = NEOPIXEL_PIN_MODE;
@@ -209,6 +218,10 @@ void board_app_jump(void)
 
 #ifdef LED_PIN
   HAL_GPIO_DeInit(LED_PORT, LED_PIN);
+#endif
+
+#ifdef CUSTOM_GPIO_PIN
+  HAL_GPIO_DeInit(CUSTOM_GPIO_PORT, CUSTOM_GPIO_PIN);
 #endif
 
 #if NEOPIXEL_NUMBER
