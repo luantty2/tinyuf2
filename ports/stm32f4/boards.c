@@ -75,7 +75,7 @@ void board_init(void)
 #ifdef CUSTOM_GPIO_PIN
   GPIO_InitStruct.Pin = CUSTOM_GPIO_PIN;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
   HAL_GPIO_Init(CUSTOM_GPIO_PORT, &GPIO_InitStruct);
   HAL_GPIO_WritePin(CUSTOM_GPIO_PORT, CUSTOM_GPIO_PIN, 1);
