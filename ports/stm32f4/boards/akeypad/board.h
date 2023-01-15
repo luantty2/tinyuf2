@@ -25,6 +25,8 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
+#define USB_NO_VBUS_PIN
+
 //--------------------------------------------------------------------+
 // Button
 //--------------------------------------------------------------------+
@@ -35,14 +37,15 @@
 
 #define LED_PORT              GPIOC
 #define LED_PIN               GPIO_PIN_5
-#define LED_STATE_ON          0
+#define LED_STATE_ON          1
 
 //--------------------------------------------------------------------+
-// Custom GPIO
+// Custom GPIO, used for USB mux
 //--------------------------------------------------------------------+
 
-#define CUSTOM_GPIO_PORT              GPIOB
-#define CUSTOM_GPIO_PIN               GPIO_PIN_14
+#define CUSTOM_GPIO_PORT      GPIOB
+#define CUSTOM_GPIO_PIN       GPIO_PIN_14
+
 
 //--------------------------------------------------------------------+
 // Neopixel
@@ -52,7 +55,7 @@
 #define NEOPIXEL_NUMBER       0
 
 #define NEOPIXEL_PORT         GPIOC
-#define NEOPIXEL_PIN          GPIO_PIN_1
+#define NEOPIXEL_PIN          GPIO_PIN_0
 #define NEOPIXEL_PIN_MODE     GPIO_MODE_OUTPUT_PP
 
 //--------------------------------------------------------------------+
@@ -66,27 +69,27 @@
 // USB UF2
 //--------------------------------------------------------------------+
 
-#define USB_VID           0x239A
-#define USB_PID           0x0059
+#define USB_VID           0xAB85
+#define USB_PID           0x0618
 #define USB_MANUFACTURER  "luantty2"
-#define USB_PRODUCT       "8kpad boot"
+#define USB_PRODUCT       "akeypad boot"
 
 #define UF2_PRODUCT_NAME  USB_MANUFACTURER " " USB_PRODUCT
-#define UF2_BOARD_ID      "STM32F405-ULPI"
+#define UF2_BOARD_ID      "STM32F405"
 #define UF2_VOLUME_LABEL  "F405BOOT"
-#define UF2_INDEX_URL     "https://www.adafruit.com/product/4382"
+#define UF2_INDEX_URL     "https://www.github.com/luantty2"
 
 //--------------------------------------------------------------------+
 // UART
 //--------------------------------------------------------------------+
 
-#define UART_DEV              USART3
-#define UART_CLOCK_ENABLE     __HAL_RCC_USART3_CLK_ENABLE
-#define UART_CLOCK_DISABLE    __HAL_RCC_USART3_CLK_DISABLE
-#define UART_GPIO_PORT        GPIOB
-#define UART_GPIO_AF          GPIO_AF7_USART3
-#define UART_TX_PIN           GPIO_PIN_10
-#define UART_RX_PIN           GPIO_PIN_11
+// #define UART_DEV              USART3
+// #define UART_CLOCK_ENABLE     __HAL_RCC_USART3_CLK_ENABLE
+// #define UART_CLOCK_DISABLE    __HAL_RCC_USART3_CLK_DISABLE
+// #define UART_GPIO_PORT        GPIOB
+// #define UART_GPIO_AF          GPIO_AF7_USART3
+// #define UART_TX_PIN           GPIO_PIN_10
+// #define UART_RX_PIN           GPIO_PIN_11
 
 //--------------------------------------------------------------------+
 // RCC Clock

@@ -44,7 +44,7 @@
 
 // Enable write protection
 #ifndef TINYUF2_PROTECT_BOOTLOADER
-#define TINYUF2_PROTECT_BOOTLOADER    1
+#define TINYUF2_PROTECT_BOOTLOADER    0
 #endif
 
 // Brightness percentage from 1 to 255
