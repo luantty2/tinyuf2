@@ -1,4 +1,6 @@
 /sdkconfig
+*/.DS_Store
+.DS_Store
 *.o
 *.d
 *.P
