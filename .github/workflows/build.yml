@@ -1,0 +1,116 @@
+name: Build
+
+on:
+  push:
+    paths:
+      - 'apps/**'
+      - 'lib/**'
+      - 'ports/**'
+      - 'src/**'
+      - '.github/actions/**'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/build_util.yml'
+      - '.github/workflows/build_ghostfat.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'apps/**'
+      - 'lib/**'
+      - 'ports/**'
+      - 'src/**'
+      - '.github/actions/**'
+      - '.github/workflows/build.yml'
+      - '.github/workflows/build_util.yml'
+      - '.github/workflows/build_ghostfat.yml'
+  repository_dispatch:
+  release:
+    types:
+      - created
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  set-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      json: ${{ steps.set-matrix-json.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+
+      - name: Generate matrix json
+        id: set-matrix-json
+        run: |
+          MATRIX_JSON=$(python .github/workflows/ci_set_matrix.py)
+          echo "matrix=$MATRIX_JSON"
+          echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+
+  # ---------------------------------------
+  # Build ARM
+  # ---------------------------------------
+  arm:
+    needs: set-matrix
+    uses: ./.github/workflows/build_util.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        port:
+        # Alphabetical order
+        - 'kinetis_k32l2'
+        - 'lpc55'
+        - 'mimxrt10xx'
+        - 'stm32f3'
+        - 'stm32f4'
+        - 'stm32l4'
+    with:
+      port: ${{ matrix.port }}
+      boards: ${{ toJSON(fromJSON(needs.set-matrix.outputs.json)[matrix.port].board) }}
+      build-system: 'make'
+      toolchain: 'arm-gcc'
+
+  # ---------------------------------------
+  # Build ESP
+  # ---------------------------------------
+  esp:
+    #if: false
+    needs: set-matrix
+    uses: ./.github/workflows/build_util.yml
+    with:
+      port: 'espressif'
+      boards: ${{ toJSON(fromJSON(needs.set-matrix.outputs.json)['espressif'].board) }}
+      build-system: 'make'
+      toolchain: 'esp-idf'
+      toolchain_url: 'v5.1.1'
+
+  # ---------------------------------------
+  # Build RISC-V
+  # ---------------------------------------
+  riscv:
+    needs: set-matrix
+    uses: ./.github/workflows/build_util.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        port:
+          # Alphabetical order
+          - 'ch32v20x'
+    with:
+      port: ${{ matrix.port }}
+      boards: ${{ toJSON(fromJSON(needs.set-matrix.outputs.json)[matrix.port].board) }}
+      build-system: 'make'
+      toolchain: 'riscv-gcc'
+      toolchain_url: 'https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v13.2.0-2/xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz'
+
+  # ---------------------------------------
+  # Unit testing with ghostfat
+  # ---------------------------------------
+  ghostfat:
+    needs: set-matrix
+    uses: ./.github/workflows/build_ghostfat.yml
+    with:
+        boards: ${{ toJSON(fromJSON(needs.set-matrix.outputs.json)['test_ghostfat'].board) }}
