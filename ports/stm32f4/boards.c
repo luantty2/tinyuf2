@@ -80,6 +80,15 @@ void board_init(void)
   HAL_GPIO_Init(NEOPIXEL_PORT, &GPIO_InitStruct);
 #endif
 
+#ifdef CUSTOM_GPIO_PIN
+  GPIO_InitStruct.Pin = CUSTOM_GPIO_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+  HAL_GPIO_Init(CUSTOM_GPIO_PORT, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(CUSTOM_GPIO_PORT, CUSTOM_GPIO_PIN, 1);
+#endif
+
 #if defined(UART_DEV) && CFG_TUSB_DEBUG
   UART_CLOCK_ENABLE();
 
@@ -213,6 +222,10 @@ void board_app_jump(void)
 
 #if NEOPIXEL_NUMBER
   HAL_GPIO_DeInit(NEOPIXEL_PORT, NEOPIXEL_PIN);
+#endif
+
+#ifdef CUSTOM_GPIO_PIN
+  HAL_GPIO_DeInit(CUSTOM_GPIO_PORT, CUSTOM_GPIO_PIN);
 #endif
 
 #if defined(UART_DEV) && CFG_TUSB_DEBUG
