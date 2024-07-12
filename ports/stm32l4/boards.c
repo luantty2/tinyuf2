@@ -264,7 +264,7 @@ uint8_t board_usb_get_serial(uint8_t serial_id[16])
 
 void board_led_write(uint32_t state)
 {
-  HAL_GPIO_WritePin(LED_PORT, LED_PIN, state ? LED_STATE_ON : (1-LED_STATE_ON));
+  // HAL_GPIO_WritePin(LED_PORT, LED_PIN, state ? LED_STATE_ON : (1-LED_STATE_ON));
 }
 
 #if NEOPIXEL_NUMBER
